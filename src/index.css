@@ -97,6 +97,7 @@ header h1 {
     border: none;
     flex: 1;
     font-size: 1.6rem;
+    width: 100%;
 }
 .formulario input[type="submit"] {
     background-color: #1048a4;
@@ -239,11 +240,13 @@ main {
     display: flex;
     align-items: center;
     gap: 2rem;
+    
 }
 .filtros label {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 900;
     color: var(--gris-oscuro);
+    
 }
 .filtros select {
     flex: 1;
@@ -252,6 +255,7 @@ main {
     border-radius: 1rem;
     text-align: center;
     background-color: var(--gris-claro);
+     width: auto;
 }
 
 .listado-gastos {
@@ -353,8 +357,7 @@ main {
 }
 
 .modal .formulario {
-    max-width: 80rem;
-    width: 40rem;
+    
     transition-property: all;
     transition-duration: 300ms;
     transition-timing-function: ease-in;
@@ -368,8 +371,9 @@ body .modal {
 }
 
 .modal .formulario.animar {
-    position: relative;
+    position: initial;
     opacity: 1;
+   
 }
 
 .modal .formulario.cerrar {
@@ -378,6 +382,8 @@ body .modal {
 
 .modal label {
     text-align: left;
+    width: 100%;
+    
 }
 
 .CircularProgressbar .CircularProgressbar-text {

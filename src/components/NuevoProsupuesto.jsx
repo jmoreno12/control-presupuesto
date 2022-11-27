@@ -22,7 +22,7 @@ if(!Number(presupuesto) || Number(presupuesto) < 0 ){
                 <label>Definir Presupuesto</label>
                 <input className="nuevo-presupuesto" 
                 type="number"
-                placeholder="Agrega tu Presupuesto" 
+                placeholder="Tu Presupuesto" 
                 value={presupuesto}
                 onChange={e=>setPresupuesto(Number(e.target.value))}
                 />
