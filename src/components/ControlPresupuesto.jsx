@@ -1,76 +1,88 @@
-import React, { useState, useEffect } from 'react'
-import {CircularProgressbar,buildStyles} from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist/styles.css'
+import { useState, useEffect } from 'react'
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
+import "react-circular-progressbar/dist/styles.css"
 
-const ControlPresupuesto = ({setisValidPresupuesto,presupuesto,gastos,setPresupuesto,setGastos}) => {
+const ControlPresupuesto = ({
+        gastos,
+        setGastos,
+        presupuesto,
+        setPresupuesto,
+        setisValidPresupuesto
+    }) => {
 
-const [disponible, setDisponible] = useState(0)
-const [gastado, setGastado] = useState(0)
+    const [porcentaje, setPorcentaje] = useState(10)
+    const [disponible, setDisponible] = useState(0)
+    const [gastado, setGastado] = useState(0)
 
-const [porcentaje, setPorcentaje] = useState(0)
+    useEffect(() => {
+      const totalGastado = gastos.reduce( (total, gasto ) => gasto.cantidad + total, 0);
+      const totalDisponible = presupuesto - totalGastado;
 
-useEffect(() => {
- const total = gastos.reduce((tot,gasto)=> gasto.cantidad+ tot,0)
- const nuevopor =(((presupuesto-total)/presupuesto) *100).toFixed(2)
+      // Calcular el porcentaje gastado
+      const nuevoPorcentaje = (( ( presupuesto - totalDisponible ) / presupuesto  ) * 100).toFixed(2);
 
- setGastado(total)
- setDisponible(presupuesto-total)
+      
+      setDisponible(totalDisponible)
+      setGastado(totalGastado)
+      setTimeout(() => {
+        setPorcentaje(nuevoPorcentaje)
+      }, 1500);
+    }, [gastos])
 
-setTimeout(() => {
-    setPorcentaje(nuevopor)
-}, 1000);
 
-}, [gastos])
-
-const formatear =(cantidad)=>{
-    return cantidad.toLocaleString('en-US',{sytle:'currency',currency:'USD'})
-}
-
-const handleReset=() =>{
-    const resultado = confirm('Desea agregar otro presupuesto')
-    if(resultado){
-setGastos([])
-setPresupuesto('')
-setisValidPresupuesto(false)
+    const formatearCantidad = (cantidad) => {
+        return cantidad.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
+         })
     }
-}
 
-  return (
-    <div className="contenedor-presupuesto contenedor sombra dos-columnas">
- <div>
+    const handleResetApp = () => {
+        const resultado = confirm('¿Deseas reiniciar presupuesto y gastos?');
 
-    <CircularProgressbar
-    styles={buildStyles({
-pathColor: porcentaje >100 ? '#DC2626' : '#3B82F6',
-trailColor:'#F5F5F5',
-textColor:porcentaje >100 ? '#DC2626' : '#3B82F6'
-    })}
-    value={porcentaje}
-text={`${porcentaje}% Gastado`}
+        if(resultado) {
+            setGastos([])
+            setPresupuesto(0)
+            setisValidPresupuesto(false)
+        } 
+    }
 
-    />
+    return (
+        <div className="contenedor-presupuesto contenedor sombra dos-columnas">
+            <div>
+                <CircularProgressbar
+                    styles={buildStyles({
+                        pathColor: porcentaje > 100 ? '#DC2626' : '#3B82F6',
+                        trailColor: '#F5F5F5',
+                        textColor: porcentaje > 100 ? '#DC2626' : '#3B82F6',
+                    })}
+                    value={porcentaje}
+                    text={`${porcentaje}% Gastado`}
+                />
+            </div>
 
- </div>
-<div className='contenido-presupuesto'>
-<button className='reset-app' type='button'
-onClick={handleReset}>
-Resetear Valor
+            <div className="contenido-presupuesto">
+                <button
+                    className="reset-app"
+                    type="button"
+                    onClick={handleResetApp}
+                >
+                    Resetear App
+                </button>
+                <p>
+                    <span>Presupuesto: </span>{formatearCantidad(presupuesto)}
+                </p>
 
-</button>
-    <p>
-        <span> Presupuesto : {''} ${formatear(presupuesto)} </span> 
-    </p>
-    <p className={`${disponible <0 ? 'negativo': ''}`}>
-        <span> Disponible : {''} ${formatear(disponible)} </span> 
-    </p>
-    <p>
-        <span> Gastado : {''} ${formatear(gastado)} </span> 
-    </p>
-   
+                <p className={`${disponible < 0 ? 'negativo' : '' }`}>
+                    <span>Disponible: </span>{formatearCantidad(disponible)}
+                </p>
 
-</div>
-</div>
-  )
+                <p>
+                    <span>Gastado: </span>{formatearCantidad(gastado)}
+                </p>
+            </div>
+        </div>
+    )
 }
 
 export default ControlPresupuesto
